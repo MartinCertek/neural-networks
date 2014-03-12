@@ -2,6 +2,7 @@ import random
 import math
 
 def activationFunction(x):
+   #sigmoid function
    return 1.0 / (1.0 + math.exp(-x))
 
 class Node:
@@ -14,7 +15,7 @@ class Node:
       self.addBias()
 
    def addBias(self):
-      self.incomingEdges.append(Edge(BiasNode(), self))
+      self.incomingEdges.append(Edge(BiasNode(), self,0,0)) #chcecknut, ci netreba dat index_i, index_j
 
    def evaluate(self, inputVector):
       if self.lastOutput is not None:
@@ -23,12 +24,50 @@ class Node:
       self.lastInput = []
       weightedSum = 0
 
+      print "*********************"
       for e in self.incomingEdges:
          theInput = e.source.evaluate(inputVector)
+         #print "Input:"
+         #print theInput
+         print "I index:"
+         print e.index_i
+         print "Weight:"
+         print e.weight
          self.lastInput.append(theInput)
-         weightedSum += e.weight * theInput
+         weightedSum += e.weight * theInput  #TODO pridat prah
+         #print "weight:"
+         #print e.weight
+         #print "--------------------"
+
+
+
 
       self.lastOutput = activationFunction(weightedSum)
+      self.evaluateCache = self.lastOutput
+      return self.lastOutput
+
+   def evaluate_test(self, inputVector):
+
+      print inputVector
+      if self.lastOutput is not None:
+         return self.lastOutput
+
+      self.lastInput = []
+      weightedSum = 0
+      #print "Weights"
+
+      for e in self.incomingEdges:
+         theInput = e.source.evaluate(inputVector)
+         #print theInput
+         self.lastInput.append(theInput)
+         #print e.weight
+         weightedSum += e.weight * theInput  #TODO pridat prah
+
+      #print "weightedSum:"
+      #print weightedSum
+      self.lastOutput = activationFunction(weightedSum)
+      #print "activationFunction:"
+      #print self.lastOutput
       self.evaluateCache = self.lastOutput
       return self.lastOutput
 
@@ -42,14 +81,15 @@ class Node:
 
       assert self.lastOutput is not None
 
-      if self.outgoingEdges == []: # this is an output node
+      if self.outgoingEdges == []: # this is output node
          self.error = label - self.lastOutput
       else:
          self.error = sum([edge.weight * edge.target.getError(label) for edge in self.outgoingEdges])
+         #print edge.weight
 
       return self.error
 
-   def updateWeights(self, learningRate):
+   def updateWeights(self, learningRate, momentum):
       ''' Update the weights of a node, and all of its successor nodes.
          Assume self is not an InputNode. If the error, lastOutput, and
          lastInput are None, then this node has already been updated. '''
@@ -59,10 +99,10 @@ class Node:
 
          for i, edge in enumerate(self.incomingEdges):
             edge.weight += (learningRate * self.lastOutput * (1 - self.lastOutput) *
-                           self.error * self.lastInput[i])
+                           self.error * self.lastInput[i]) # + (momentum * lastWeight)
 
          for edge in self.outgoingEdges:
-            edge.target.updateWeights(learningRate)
+            edge.target.updateWeights(learningRate, momentum)
 
          self.error = None
          self.lastInput = None
@@ -88,9 +128,13 @@ class InputNode(Node):
       self.lastOutput = inputVector[self.index]
       return self.lastOutput
 
-   def updateWeights(self, learningRate):
+   def evaluate_test(self, inputVector):
+      self.lastOutput = inputVector[self.index]
+      return self.lastOutput
+
+   def updateWeights(self, learningRate, momentum):
       for edge in self.outgoingEdges:
-         edge.target.updateWeights(learningRate)
+         edge.target.updateWeights(learningRate, momentum)
 
    def getError(self, label):
       for edge in self.outgoingEdges:
@@ -112,10 +156,14 @@ class BiasNode(InputNode):
 
 
 class Edge:
-   def __init__(self, source, target):
-      self.weight = random.uniform(0,1)
-      self.source = source
-      self.target = target
+   def __init__(self, source, target, index_i, index_j):
+      self.weight   = random.uniform(-0.5,0.5)
+      self.source   = source
+      self.target   = target
+      self.index_i  = index_i
+      self.index_j  = index_j
+      print index_i
+      print index_j
 
       # attach the edges to its nodes
       source.outgoingEdges.append(self)
@@ -132,22 +180,36 @@ class Network:
       self.outputNode.clearEvaluateCache()
 
       output = self.outputNode.evaluate(inputVector)
+      #print output
+      return output
+
+   def evaluate_test(self, inputVector):
+      assert max([v.index for v in self.inputNodes]) < len(inputVector)
+      self.outputNode.clearEvaluateCache()
+
+      output = self.outputNode.evaluate_test(inputVector)
+      #print output
       return output
 
    def propagateError(self, label):
       for node in self.inputNodes:
          node.getError(label)
 
-   def updateWeights(self, learningRate):
+   def updateWeights(self, learningRate, momentum):
       for node in self.inputNodes:
-         node.updateWeights(learningRate)
+         node.updateWeights(learningRate, momentum)
 
-   def train(self, labeledExamples, learningRate=0.9, maxIterations=10000):
+   def train(self, labeledExamples, learningRate=0.9, momentum=0, maxIterations=100000):
+      #random.shuffle(labeledExamples)
+      #TODO add error rate as stop factor
       while maxIterations > 0:
          for example, label in labeledExamples:
+            print example
+            print label
             output = self.evaluate(example)
+            print output
             self.propagateError(label)
-            self.updateWeights(learningRate)
+            self.updateWeights(learningRate, momentum)
 
             maxIterations -= 1
 
