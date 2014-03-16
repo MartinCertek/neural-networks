@@ -3,8 +3,48 @@ from neuralnetwork import *
 from data import * 
 from ast import literal_eval
 
+def xorRun():
+
+  #TODO citat zo vstupu
+   n_num = 2
+   h_num = 2
+   network = Network()
+   inputNodes = [InputNode(i) for i in range(n_num)]
+   hiddenNodes = [Node() for i in range(h_num)]
+   outputNode = Node()
+
+   # weights are all randomized
+   i = 0
+   for inputNode in inputNodes:
+      i += 1
+      j = 0
+      for node in hiddenNodes:
+         j += 1
+         Edge(inputNode, node, i, j)
+      
+   n_num += 1
+   m = 0
+   for node in hiddenNodes:
+      m += 1
+      Edge(node, outputNode, n_num, m)
+  
+   network.outputNode = outputNode
+   network.inputNodes.extend(inputNodes)
+
+   xorData = [
+             ((0,0), 0),
+             ((0,1), 1),
+             ((1,0), 1),
+             ((1,1), 0),
+            ]
+
+   network.train(xorData, learningRate=0.5, momentum=0, maxIterations=10000)
+
+   for number, isEven in xorData:
+      print "Error for %r is %0.4f. Output was:%0.4f" % (number, isEven - network.evaluate(number), network.evaluate(number))
+
 def parityRun():
-   #citat zo vstupu
+   #TODO citat zo vstupu
    n_num = 8
    h_num = 8
    network = Network()
@@ -12,7 +52,7 @@ def parityRun():
    hiddenNodes = [Node() for i in range(h_num)]
    outputNode = Node()
 
-   # drzat cislovanie hran - z akeho uzla ide , kam, vznikne tak pole - 
+   #drzat cislovanie hran - z akeho uzla ide , kam, vznikne tak pole - 
    #array zo suradnicami i, j - z iteho vstupu ide do jteho neuronu vyssej vrstvy
 
    # weights are all randomized
@@ -42,35 +82,10 @@ def parityRun():
 
    #TODO - random order of lines
 
-   xorData = [
-                      ((0,0), 0),
-                      ((0,1), 1),
-                      ((1,0), 1),
-                      ((1,1), 0),
-                     ]
-
    
-
-   #file = open('parity_input.txt', 'r')
-
-   #a = file.read()
-   #print b
-
-   #parityData = a
-   #my = data.Data()
-   #my.getData()
-
-   
-   
-  
-   #print my
-
-#[('0, 0, 0, 0, 0, 0, 0, 0', '0'), ('0, 0, 0, 0, 0, 0, 0, 1', '1')]
-
    '''
    # TODO - read number of iterations from command line
-   #network.train(parityData, maxIterations=5000)
-   #print parityData
+ 
    result = []
    with open('parity.txt', 'r') as f:
      for line in f:
@@ -80,9 +95,9 @@ def parityRun():
    parityData = result[:255]
    #print parityData
    ''' 
-   a = Data()
-   b = a.getData()
-   network.train(b, learningRate=0.5, momentum=0, maxIterations=10)
+   new_inst = Data()
+   parityData = new_inst.getData()
+   network.train(parityData, learningRate=0.5, momentum=0, maxIterations=10)
 
 
    # test for consistency
@@ -238,10 +253,12 @@ if __name__ == "__main__":
    #   theFile.write("{")
 
    #sineTest(1, 20)
-   #xorTest() 
+
+   #XOR_test
+   xorRun() 
 
    #PARITY_test
-   parityRun()
+   #parityRun()
 
    #with open('sine.txt','a') as theFile:
    #   theFile.write("}\n")
