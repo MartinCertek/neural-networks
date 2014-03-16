@@ -1,11 +1,16 @@
 import random
 import math
 
+#natiahnut velkost zo vstupu
+table= [ [ 0 for i in range(10) ] for j in range(10) ]
+#print table
+
 def activationFunction(x):
    #sigmoid function
    return 1.0 / (1.0 + math.exp(-x))
 
 class Node:
+
    def __init__(self):
       self.lastOutput = None
       self.lastInput = None
@@ -13,6 +18,7 @@ class Node:
       self.outgoingEdges = []
       self.incomingEdges = []
       self.addBias()
+
 
    def addBias(self):
       self.incomingEdges.append(Edge(BiasNode(), self,0,0)) #chcecknut, ci netreba dat index_i, index_j
@@ -23,53 +29,58 @@ class Node:
 
       self.lastInput = []
       weightedSum = 0
+   
 
-      print "*********************"
+      #file = open("output.txt", "w")
+
+      #print "*********************"
       for e in self.incomingEdges:
          theInput = e.source.evaluate(inputVector)
-         #print "Input:"
-         #print theInput
-         print "I index:"
-         print e.index_i
-         print "Weight:"
-         print e.weight
+         print "Input:"
+         print theInput
+         print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight) 
+         table[e.index_i][e.index_j] = e.weight
          self.lastInput.append(theInput)
          weightedSum += e.weight * theInput  #TODO pridat prah
+         #file.write(str(e.weight))
          #print "weight:"
          #print e.weight
          #print "--------------------"
 
-
+      #file.close()
+      
 
 
       self.lastOutput = activationFunction(weightedSum)
       self.evaluateCache = self.lastOutput
+      print "result:"
+      print self.lastOutput
       return self.lastOutput
 
    def evaluate_test(self, inputVector):
 
-      print inputVector
       if self.lastOutput is not None:
          return self.lastOutput
 
       self.lastInput = []
       weightedSum = 0
-      #print "Weights"
+   
 
+      #file = open("output.txt", "w")
+
+      #print "*********************"
       for e in self.incomingEdges:
          theInput = e.source.evaluate(inputVector)
+         #print "Input:"
          #print theInput
+         print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight) 
+         table[e.index_i][e.index_j] = e.weight
          self.lastInput.append(theInput)
-         #print e.weight
          weightedSum += e.weight * theInput  #TODO pridat prah
-
-      #print "weightedSum:"
-      #print weightedSum
-      self.lastOutput = activationFunction(weightedSum)
-      #print "activationFunction:"
-      #print self.lastOutput
-      self.evaluateCache = self.lastOutput
-      return self.lastOutput
+         #file.write(str(e.weight))
+         print "weightedSum:"
+         print weightedSum
+         #print "--------------------"
 
    def getError(self, label):
       ''' Get the error for a given node in the network. If the node is an
@@ -113,6 +124,8 @@ class Node:
          self.lastOutput = None
          for edge in self.incomingEdges:
             edge.source.clearEvaluateCache()
+
+
 
 
 class InputNode(Node):
@@ -162,9 +175,7 @@ class Edge:
       self.target   = target
       self.index_i  = index_i
       self.index_j  = index_j
-      print index_i
-      print index_j
-
+  
       # attach the edges to its nodes
       source.outgoingEdges.append(self)
       target.incomingEdges.append(self)
@@ -204,12 +215,13 @@ class Network:
       #TODO add error rate as stop factor
       while maxIterations > 0:
          for example, label in labeledExamples:
-            print example
-            print label
+            #print example
+            #print label
             output = self.evaluate(example)
-            print output
+            #print output
             self.propagateError(label)
             self.updateWeights(learningRate, momentum)
 
             maxIterations -= 1
 
+#print table
