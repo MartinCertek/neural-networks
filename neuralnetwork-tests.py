@@ -14,7 +14,7 @@ def xorRun(learningRate, momentum, maxIterations):
    hiddenNodes = [Node() for i in range(h_num)]
    outputNode = Node()
 
-   # weights are all randomized
+   # vytvori hrany medzi vstupnou vrstvou a skrytou vrstvou, vahy su random 
    i = 0
    for inputNode in inputNodes:
       i += 1
@@ -23,6 +23,7 @@ def xorRun(learningRate, momentum, maxIterations):
          j += 1
          Edge(inputNode, node, i, j)
       
+   #vytvori hrany medzi skrytou vrstvou a vystupom
    n_num += 1
    m = 0
    for node in hiddenNodes:
@@ -32,6 +33,7 @@ def xorRun(learningRate, momentum, maxIterations):
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
 
+   #data
    xorData = [
              ((0,0), 0),
              ((0,1), 1),
@@ -56,7 +58,7 @@ def parityRun(learningRate, momentum, maxIterations):
    #drzat cislovanie hran - z akeho uzla ide , kam, vznikne tak pole - 
    #array zo suradnicami i, j - z iteho vstupu ide do jteho neuronu vyssej vrstvy
 
-   # weights are all randomized
+   # vytvori hrany medzi vstupnou vrstvou a skrytou vrstvou, vahy su random 
    i = 0
    
    for inputNode in inputNodes:
@@ -70,6 +72,8 @@ def parityRun(learningRate, momentum, maxIterations):
          #print str(i) + "," + str(j)
          #print j
 
+      #vytvori hrany medzi skrytou vrstvou a vystupom
+
    n_num += 1
    m = 0
    for node in hiddenNodes:
@@ -81,12 +85,7 @@ def parityRun(learningRate, momentum, maxIterations):
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
 
-   #TODO - random order of lines
-
-   
-   '''
-   # TODO - read number of iterations from command line
- 
+   ''' 
    result = []
    with open('parity.txt', 'r') as f:
      for line in f:
@@ -101,13 +100,13 @@ def parityRun(learningRate, momentum, maxIterations):
    network.train(parityData, float(learningRate), float(momentum), int(maxIterations))
 
 
-   # test for consistency
+   # test konzistentnosti
    #for number, isEven in parityData:
    #   print "Error for %r is %0.4f. Output was:%0.4f" % (number, isEven - network.evaluate(number), network.evaluate(number))
 
    
-   #test input from user
-   #TODO - read from comand line
+   #test input od pouzivatela
+   #TODO - citat input z terminalu
    
    input_data = [((1,1,0,1,0,0,1,0), 0)]
    for number, result in input_data:
@@ -117,34 +116,6 @@ def parityRun(learningRate, momentum, maxIterations):
       #errors = abs(result - round(network.evaluate_test(number)))
       #print "Error: %0.4f" % (errors)
       network.evaluate_test(number)
-  
-   
-
-
-
-def makeNetwork(numInputs, numHiddenLayers, numInEachLayer):
-   network = Network()
-   inputNodes = [InputNode(i) for i in range(numInputs)]
-   outputNode = Node()
-   network.outputNode = outputNode
-   network.inputNodes.extend(inputNodes)
-
-   layers = [[Node() for _ in range(numInEachLayer)] for _ in range(numHiddenLayers)]
-
-   # weights are all randomized
-   for inputNode in inputNodes:
-      for node in layers[0]:
-         Edge(inputNode, node)
-
-   for layer1, layer2 in [(layers[i], layers[i+1]) for i in range(numHiddenLayers-1)]:
-      for node1 in layer1:
-         for node2 in layer2:
-            Edge(node1, node2)
-
-   for node in layers[-1]:
-      Edge(node, outputNode)
-
-   return network
 
 
 def sineTest(numLayers, numNodes):
@@ -256,18 +227,10 @@ if __name__ == "__main__":
      xorRun(sys.argv[2], sys.argv[3], sys.argv[4])
    elif sys.argv[1] == "parity":
      parityRun(sys.argv[2], sys.argv[3], sys.argv[4])
+
    
-   
-   #binaryNumbersTest()
- 
-   #print "Sine"
-   #with open('sine.txt','w') as theFile:
+   #with open('data.txt','w') as theFile:
    #   theFile.write("{")
-
-   #sineTest(1, 20)
-
-   #XOR_test
-   #xorRun() 
 
    #PARITY_test
    #parityRun()
