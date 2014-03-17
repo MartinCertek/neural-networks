@@ -1,9 +1,10 @@
-from unittest import *
+#from unittest import *
 from neuralnetwork import *
 from data import * 
 from ast import literal_eval
+import sys
 
-def xorRun():
+def xorRun(learningRate, momentum, maxIterations):
 
   #TODO citat zo vstupu
    n_num = 2
@@ -38,12 +39,12 @@ def xorRun():
              ((1,1), 0),
             ]
 
-   network.train(xorData, learningRate=0.5, momentum=0, maxIterations=10000)
+   network.train(xorData, float(learningRate), float(momentum), int(maxIterations))
 
    for number, isEven in xorData:
       print "Error for %r is %0.4f. Output was:%0.4f" % (number, isEven - network.evaluate(number), network.evaluate(number))
 
-def parityRun():
+def parityRun(learningRate, momentum, maxIterations):
    #TODO citat zo vstupu
    n_num = 8
    h_num = 8
@@ -97,7 +98,7 @@ def parityRun():
    ''' 
    new_inst = Data()
    parityData = new_inst.getData()
-   network.train(parityData, learningRate=0.5, momentum=0, maxIterations=10)
+   network.train(parityData, float(learningRate), float(momentum), int(maxIterations))
 
 
    # test for consistency
@@ -245,7 +246,18 @@ def digitsTest():
 
 if __name__ == "__main__":
 
+   
    print "Do network:"
+
+   n = len(sys.argv[1:])
+   if n == 0:
+     sys.exit('usage: python %s prameters' % sys.argv[0])
+   elif sys.argv[1] == "xor":
+     xorRun(sys.argv[2], sys.argv[3], sys.argv[4])
+   elif sys.argv[1] == "parity":
+     parityRun(sys.argv[2], sys.argv[3], sys.argv[4])
+   
+   
    #binaryNumbersTest()
  
    #print "Sine"
@@ -255,7 +267,7 @@ if __name__ == "__main__":
    #sineTest(1, 20)
 
    #XOR_test
-   xorRun() 
+   #xorRun() 
 
    #PARITY_test
    #parityRun()

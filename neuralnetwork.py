@@ -73,7 +73,8 @@ class Node:
          theInput = e.source.evaluate(inputVector)
          #print "Input:"
          #print theInput
-         print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight) 
+         print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight)
+         e.lastWeight = e.weight 
          table[e.index_i][e.index_j] = e.weight
          self.lastInput.append(theInput)
          weightedSum += e.weight * theInput  #TODO pridat prah
@@ -110,7 +111,7 @@ class Node:
 
          for i, edge in enumerate(self.incomingEdges):
             edge.weight += (learningRate * self.lastOutput * (1 - self.lastOutput) *
-                           self.error * self.lastInput[i]) # + (momentum * lastWeight)
+                           self.error * self.lastInput[i])  + (momentum * edge.lastWeight)
 
          for edge in self.outgoingEdges:
             edge.target.updateWeights(learningRate, momentum)
@@ -173,6 +174,7 @@ class Edge:
       self.weight   = random.uniform(-0.5,0.5)
       self.source   = source
       self.target   = target
+      self.lastWeight = 0
       self.index_i  = index_i
       self.index_j  = index_j
   
@@ -213,6 +215,10 @@ class Network:
    def train(self, labeledExamples, learningRate=0.9, momentum=0, maxIterations=100000):
       #random.shuffle(labeledExamples)
       #TODO add error rate as stop factor
+      i =  range(len(labeledExamples))
+      random.shuffle(i)
+      print labeledExamples
+
       while maxIterations > 0:
          for example, label in labeledExamples:
             #print example
