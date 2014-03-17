@@ -6,7 +6,7 @@ table= [ [ 0 for i in range(10) ] for j in range(10) ]
 #print table
 
 def activationFunction(x):
-   #sigmoid function
+   #sigmoid funkcia
    return 1.0 / (1.0 + math.exp(-x))
 
 class Node:
@@ -84,9 +84,10 @@ class Node:
          #print "--------------------"
 
    def getError(self, label):
-      ''' Get the error for a given node in the network. If the node is an
-         output node, label will be used to compute the error. For an input node, we
-         simply ignore the error. '''
+
+      '''Vrati error pre zadany uzol siete. 
+         Ak je uzol vystupny, pre urcenie chyby pouzije vysledok zodpovedajuci vstupu. 
+         Pri vstupnom uzle sa error neuvazuje  '''
 
       if self.error is not None:
          return self.error
@@ -97,14 +98,14 @@ class Node:
          self.error = label - self.lastOutput
       else:
          self.error = sum([edge.weight * edge.target.getError(label) for edge in self.outgoingEdges])
-         #print edge.weight
 
       return self.error
 
    def updateWeights(self, learningRate, momentum):
-      ''' Update the weights of a node, and all of its successor nodes.
-         Assume self is not an InputNode. If the error, lastOutput, and
-         lastInput are None, then this node has already been updated. '''
+      
+      '''Updatne váhy neuronu a nasledujúcich. 
+         Ak dojde k chybe, lastOutput a lastInput sa nastavia ako None a neuron bol updatnuty.
+         '''
 
       if (self.error is not None and self.lastOutput is not None
             and self.lastInput is not None):
@@ -130,9 +131,9 @@ class Node:
 
 
 class InputNode(Node):
-   ''' Input nodes simply evaluate to the value of the input for that index.
-    As such, each input node must specify an index. We allow multiple copies
-    of an input node with the same index (why not?). '''
+   ''' 
+    Vstupny uzol urci hodnotu pre zadany vstup podla prislusne zodpovedajuceho indexu. 
+    '''
 
    def __init__(self, index):
       Node.__init__(self)
