@@ -103,9 +103,9 @@ class Node:
 
    def updateWeights(self, learningRate, momentum):
       
-      '''Updatne váhy neuronu a nasledujúcich. 
+      '''Updatne vahy neuronu a nasledujucich. 
          Ak dojde k chybe, lastOutput a lastInput sa nastavia ako None a neuron bol updatnuty.
-         '''
+      '''
 
       if (self.error is not None and self.lastOutput is not None
             and self.lastInput is not None):

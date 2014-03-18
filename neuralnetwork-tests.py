@@ -4,14 +4,13 @@ from data import *
 from ast import literal_eval
 import sys
 
-def xorRun(learningRate, momentum, maxIterations):
+def xorRun(learningRate, momentum, maxIterations, inN, hN):
 
-  #TODO citat zo vstupu
-   n_num = 2
-   h_num = 2
+   n_num = int(inN)
+   h_num = int(hN)
    network = Network()
-   inputNodes = [InputNode(i) for i in range(n_num)]
-   hiddenNodes = [Node() for i in range(h_num)]
+   inputNodes = [InputNode(i) for i in range(int(n_num))]
+   hiddenNodes = [Node() for i in range(int(h_num))]
    outputNode = Node()
 
    # vytvori hrany medzi vstupnou vrstvou a skrytou vrstvou, vahy su random 
@@ -46,13 +45,13 @@ def xorRun(learningRate, momentum, maxIterations):
    for number, isEven in xorData:
       print "Error for %r is %0.4f. Output was:%0.4f" % (number, isEven - network.evaluate(number), network.evaluate(number))
 
-def parityRun(learningRate, momentum, maxIterations):
-   #TODO citat zo vstupu
-   n_num = 8
-   h_num = 8
+def parityRun(learningRate, momentum, maxIterations, inN, hN):
+
+   n_num = int(inN)
+   h_num = int(hN)
    network = Network()
-   inputNodes = [InputNode(i) for i in range(n_num)]
-   hiddenNodes = [Node() for i in range(h_num)]
+   inputNodes = [InputNode(i) for i in range(int(n_num))]
+   hiddenNodes = [Node() for i in range(int(h_num))]
    outputNode = Node()
 
    #drzat cislovanie hran - z akeho uzla ide , kam, vznikne tak pole - 
@@ -214,7 +213,6 @@ def digitsTest():
    #print "Input: %0.4f - Output: %0.4f  " %  (testData[0], network.evaluate(testData[0]) )
 
 
-
 if __name__ == "__main__":
 
    
@@ -224,9 +222,9 @@ if __name__ == "__main__":
    if n == 0:
      sys.exit('usage: python %s prameters' % sys.argv[0])
    elif sys.argv[1] == "xor":
-     xorRun(sys.argv[2], sys.argv[3], sys.argv[4])
+     xorRun(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
    elif sys.argv[1] == "parity":
-     parityRun(sys.argv[2], sys.argv[3], sys.argv[4])
+     parityRun(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
    
    #with open('data.txt','w') as theFile:
@@ -238,7 +236,6 @@ if __name__ == "__main__":
    #with open('sine.txt','a') as theFile:
    #   theFile.write("}\n")
 
-   
    #digitsTest()
    print('\a')
    print('\a')
