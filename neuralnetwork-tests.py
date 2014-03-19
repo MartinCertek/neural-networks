@@ -42,8 +42,8 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
 
    network.train(xorData, float(learningRate), float(momentum), int(maxIterations))
 
-   for number, isEven in xorData:
-      print "Error for %r is %0.4f. Output was:%0.4f" % (number, isEven - network.evaluate(number), network.evaluate(number))
+   for number, result in xorData:
+      print "Error for %r is %0.4f. Output was:%0.4f" % (number, result - network.evaluate(number, result, 4), network.evaluate(number, result, 4))
 
 def parityRun(learningRate, momentum, maxIterations, inN, hN):
 
@@ -109,12 +109,12 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
    
    input_data = [((1,1,0,1,0,0,1,0), 0)]
    for number, result in input_data:
-      print number
-      #print "Input data: %r . Value needed: %0.4f - Output: %0.4f  " %  (number, result, network.evaluate_test(number))
+      #print number
+      print "Input data: %r . Value needed: %0.4f - Output: %0.4f  " %  (number, result, network.evaluate(number, result, 256))
       
       #errors = abs(result - round(network.evaluate_test(number)))
       #print "Error: %0.4f" % (errors)
-      network.evaluate_test(number)
+      #network.evaluate_test(number)
 
 
 def sineTest(numLayers, numNodes):
