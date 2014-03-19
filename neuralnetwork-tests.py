@@ -4,7 +4,10 @@ from data import *
 from ast import literal_eval
 import sys
 
+net = []
+
 def xorRun(learningRate, momentum, maxIterations, inN, hN):
+   
 
    n_num = int(inN)
    h_num = int(hN)
@@ -20,14 +23,15 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
       j = 0
       for node in hiddenNodes:
          j += 1
-         Edge(inputNode, node, i, j)
+         Edge(inputNode, node, i, j).weight
+         
       
    #vytvori hrany medzi skrytou vrstvou a vystupom
    n_num += 1
    m = 0
    for node in hiddenNodes:
       m += 1
-      Edge(node, outputNode, n_num, m)
+      Edge(node, outputNode, n_num, m).weight
   
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
@@ -45,6 +49,33 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
    for number, result in xorData:
       print "Error for %r is %0.4f. Output was:%0.4f" % (number, result - network.evaluate(number, result, 4), network.evaluate(number, result, 4))
 
+   i = 0
+   for inputNode in inputNodes:
+      i += 1
+      j = 0
+      for node in hiddenNodes:
+         j += 1
+         print Edge(inputNode, node, i, j).weight
+         e = Edge(inputNode, node, i, j).weight
+         #f = Edge(inputNode, node, i, j).weight
+         #print f
+         net.insert(len(net), ((i,j),e))
+         print Edge
+
+         
+      
+   #vytvori hrany medzi skrytou vrstvou a vystupom
+   n_num += 1
+   m = 0
+   for node in hiddenNodes:
+      m += 1
+      print Edge(node, outputNode, n_num, m).weight
+      e = Edge(node, outputNode, n_num, m).weight
+      #f = Edge(node, outputNode, n_num, m).weight
+      #print f
+      net.insert(len(net), ((n_num,m),e))
+
+
 def parityRun(learningRate, momentum, maxIterations, inN, hN):
 
    n_num = int(inN)
@@ -59,27 +90,21 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
 
    # vytvori hrany medzi vstupnou vrstvou a skrytou vrstvou, vahy su random 
    i = 0
-   
    for inputNode in inputNodes:
       i += 1
       j = 0
       for node in hiddenNodes:
          j += 1
          Edge(inputNode, node, i, j)
-         #print InputNode
-         #
-         #print str(i) + "," + str(j)
-         #print j
+         
 
-      #vytvori hrany medzi skrytou vrstvou a vystupom
-
+   #vytvori hrany medzi skrytou vrstvou a vystupom
    n_num += 1
    m = 0
    for node in hiddenNodes:
       m += 1
       Edge(node, outputNode, n_num, m)
-      #print str(n_num) + "," + str(m)
-      #print node
+
 
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
@@ -237,6 +262,8 @@ if __name__ == "__main__":
    #   theFile.write("}\n")
 
    #digitsTest()
+   print net
+
    print('\a')
    print('\a')
    print('\a')

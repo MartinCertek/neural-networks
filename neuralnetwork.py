@@ -2,9 +2,10 @@ import random
 import math
 
 #natiahnut velkost zo vstupu
-table= [ [ 0 for i in range(10) ] for j in range(10) ]
+#table= [ [ 0 for i in range(10) ] for j in range(10) ]
 #print table
 net = []
+net.insert(0, ((2,3),13))
 
 def activationFunction(x):
    #sigmoid funkcia
@@ -41,7 +42,7 @@ class Node:
          #print "Input:"
          #print theInput
          #print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight) 
-         table[e.index_i][e.index_j] = e.weight
+         #table[e.index_i][e.index_j] = e.weight
          self.lastInput.append(theInput)
          weightedSum += e.weight * theInput  #TODO pridat prah
          #file.write(str(e.weight))
@@ -66,7 +67,7 @@ class Node:
       #print sumMSE
       return self.lastOutput
 
-   def evaluate_test(self, inputVector):
+   def evaluate_test(self, inputVector, result, listLenght):
 
       if self.lastOutput is not None:
          return self.lastOutput
@@ -79,18 +80,22 @@ class Node:
 
       #print "*********************"
       for e in self.incomingEdges:
-         theInput = e.source.evaluate(inputVector)
+         theInput = e.source.evaluate(inputVector, result. listLenght)
          #print "Input:"
          #print theInput
          #print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight)
          e.lastWeight = e.weight 
-         table[e.index_i][e.index_j] = e.weight
+         #table[e.index_i][e.index_j] = e.weight
+
+         net.insert(0, ((e.index_i,e,index_j),e.weight))
+
          self.lastInput.append(theInput)
          weightedSum += e.weight * theInput  #TODO pridat prah
          #file.write(str(e.weight))
          #print "weightedSum:"
          #print weightedSum
          #print "--------------------"
+      
 
    def getError(self, label):
 
@@ -213,7 +218,7 @@ class Network:
       assert max([v.index for v in self.inputNodes]) < len(inputVector)
       self.outputNode.clearEvaluateCache()
 
-      output = self.outputNode.evaluate(inputVector, result, listLenght)
+      output = self.outputNode.evaluate_test(inputVector, result, listLenght)
 
       #MSE = ((result - output) ** 2) 
       #print "MSE:"
@@ -284,6 +289,8 @@ class Network:
             # 
             #print error
             self.updateWeights(learningRate, momentum)
+            #self.evaluate_test(example, label, len(labeledExamples))
+
 
             # TODO vysledky ciastkovych rozdielov pre kazdy z examplov
          #print "Len: " + str(len(labeledExamples))
@@ -299,3 +306,4 @@ class Network:
 
 
 #print table
+print net
