@@ -142,72 +142,44 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
       #network.evaluate_test(number)
 
 
-def sineTest(numLayers, numNodes):
-   import math
+def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    import random
-
-   f = lambda x: 0.5 * (1.0 + math.sin(x))
-   domain = lambda: [random.random()*math.pi*4 for _ in range(100)]
-
-   network = makeNetwork(1, numLayers, numNodes)
-   labeledExamples = [((x,), f(x)) for x in  domain()]
-   network.train(labeledExamples, learningRate=0.25, maxIterations=100000)
-
-   errors = [abs(f(x) - network.evaluate((x,))) for x in domain()]
-   print "Avg error: %.4f" % (sum(errors) * 1.0 / len(errors))
-
-   with open('sine.txt', 'a') as theFile:
-      vals = tuple((x,network.evaluate((x,))) for x in domain())
-      line = "{%s},\n" % (",".join(["{%s}" % ",".join([str(n) for n in x]) for x in vals]),)
-      theFile.write(line)
-
-
-def digitsTest():
-   import random
-   #network = makeNetwork(8, 1, 8)
-
-
+   
+   n_num = int(inN)
+   h_num = int(hN)
    network = Network()
-   inputNodes = [InputNode(i) for i in range(8)]
-   hiddenNodes = [Node() for i in range(8)]
+   inputNodes = [InputNode(i) for i in range(int(n_num))]
+   hiddenNodes = [Node() for i in range(int(h_num))]
    outputNode = Node()
 
-   # weights are all randomized
+   # vytvori hrany medzi vstupnou vrstvou a skrytou vrstvou, vahy su random 
+   i = 0
    for inputNode in inputNodes:
+      i += 1
+      j = 0
       for node in hiddenNodes:
-         Edge(inputNode, node)
-
-
+         j += 1
+         Edge(inputNode, node, i, j).weight
+         
+      
+   #vytvori hrany medzi skrytou vrstvou a vystupom
+   n_num += 1
+   m = 0
    for node in hiddenNodes:
-      Edge(node, outputNode)
-
+      m += 1
+      Edge(node, outputNode, n_num, m).weight
+  
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
 
-   digits = []
-  
-
-   ''' 
-   with open('p_data.txt', 'r') as dataFile:
-      for line in dataFile:
-        #poriesit spracovanie \n na konci v premennej out_bin
-        (inBin, outBin) = line.split('|') 
-        digits.append(((inBin), outBin.rstrip()))  
-        print inBin
-        print outBin.rstrip()
-        print digits
-  '''
-         
-
-   with open('data_parity.txt', 'r') as dataFile:
-      for line in dataFile:
-         (exampleStr, classStr) = line.split(',')
-         digits.append(([int(x) for x in exampleStr.split()], int(classStr)))
-         #print exampleStr
-         #print classStr
-         #print digits
-
    
+   new_inst = Data()
+   telcoData = new_inst.getDataFromFile()
+
+   print telcoData
+
+   '''
+
    #TODO define number of test and train data
    #random.shuffle(digits)
    trainingData = digits[-0:]
@@ -236,7 +208,7 @@ def digitsTest():
    #print "Average error: %.4f" % (sum(errors)*1.0 / len(errors))
    
    #print "Input: %0.4f - Output: %0.4f  " %  (testData[0], network.evaluate(testData[0]) )
-
+   ''' 
 
 if __name__ == "__main__":
 
@@ -250,6 +222,8 @@ if __name__ == "__main__":
      xorRun(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
    elif sys.argv[1] == "parity":
      parityRun(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+   elif sys.argv[1] == "telco":
+     telcoRun(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
    
    #with open('data.txt','w') as theFile:
