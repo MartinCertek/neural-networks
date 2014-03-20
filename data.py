@@ -1,10 +1,10 @@
 class Data:
 
-	def getDataFromFile(self): 
+	def getDataTelco(self): 
 
 		digits = []
 
-		with open('p_data.txt', 'r') as dataFile:
+		with open('telcoData.txt', 'r') as dataFile:
       			for line in dataFile:
         		#poriesit spracovanie \n na konci v premennej out_bin
         			(inBin, outBin) = line.split('|') 
@@ -17,7 +17,7 @@ class Data:
 		#print digits
 		return digits
 
-	def getData(self): 
+	def getDataParity(self): 
 
 		digits = []
 

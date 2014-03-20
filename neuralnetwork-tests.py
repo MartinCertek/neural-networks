@@ -120,7 +120,7 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
    #print parityData
    ''' 
    new_inst = Data()
-   parityData = new_inst.getData()
+   parityData = new_inst.getDataParity()
    network.train(parityData, float(learningRate), float(momentum), int(maxIterations))
 
 
@@ -174,7 +174,7 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
 
    
    new_inst = Data()
-   telcoData = new_inst.getDataFromFile()
+   telcoData = new_inst.getDataTelco()
 
    print telcoData
 
@@ -236,7 +236,7 @@ if __name__ == "__main__":
    #   theFile.write("}\n")
 
    #digitsTest()
-   print net
+   #print net
 
    print('\a')
    print('\a')

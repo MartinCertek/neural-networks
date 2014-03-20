@@ -4,8 +4,9 @@ import math
 #natiahnut velkost zo vstupu
 #table= [ [ 0 for i in range(10) ] for j in range(10) ]
 #print table
+#
 net = []
-net.insert(0, ((2,3),13))
+#net.insert(0, ((2,3),13))
 
 def activationFunction(x):
    #sigmoid funkcia
