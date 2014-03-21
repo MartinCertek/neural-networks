@@ -316,11 +316,11 @@ class Network:
 
    def runNet(self, labeledExamples, learningRate, momentum, maxIterations):
       for example, label in labeledExamples:
-         a = example
-         print a
-         print label
-         #for number in a
-         #   print number
+         print "Label: %d " % label
+         print "Example: " + str(example)
+
+         for aTuple in example:
+            print(aTuple)
       
      
 

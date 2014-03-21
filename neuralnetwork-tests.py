@@ -172,23 +172,24 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
 
-   
+
+   #nacitanie dat 
    new_inst = Data()
    telcoData = new_inst.getDataTelco()
 
-   network.runNet(telcoData, learningRate, momentum, maxIterations)
-
-   #print telcoData
-
+   #network.runNet(telcoData, learningRate, momentum, maxIterations)
    
 
    #TODO define number of test and train data
-   #random.shuffle(digits)
-   trainingData = telcoData[-0:]
-   #testData = digits[:-255]
-   #testData = digits[-0:] 
-   #print trainingData
-   testData = [([1, 1, 1, 0, 0, 0, 0, 0], 1)]
+   #print "Lenght: %d " % len(telcoData)
+   trainInxEnd = int(len(telcoData) * 0.80)
+   testInxStr  = trainInxEnd
+   #print "Test index: %d" % testInxStr
+
+   trainingData = telcoData[-0:trainInxEnd]
+   testData = telcoData[testInxStr:] 
+   #print testData
+   #testData = [([1, 1, 1, 0, 0, 0, 0, 0], 1)]
    #print testData
 
    # otvorenie suboru na zapis
