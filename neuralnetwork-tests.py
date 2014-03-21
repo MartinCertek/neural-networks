@@ -176,39 +176,45 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    new_inst = Data()
    telcoData = new_inst.getDataTelco()
 
-   print telcoData
+   network.runNet(telcoData, learningRate, momentum, maxIterations)
 
-   '''
+   #print telcoData
+
+   
 
    #TODO define number of test and train data
    #random.shuffle(digits)
-   trainingData = digits[-0:]
+   trainingData = telcoData[-0:]
    #testData = digits[:-255]
    #testData = digits[-0:] 
    #print trainingData
    testData = [([1, 1, 1, 0, 0, 0, 0, 0], 1)]
    #print testData
 
-   #testData = [((1,0,0,1,0,0,1,0), 1)]
+   # otvorenie suboru na zapis
+   with open('telco_OUT.txt', 'w') as f:
+      f.write(str(testData))
+   
+
 
    #network.train(trainingData, learningRate=0.8, momentum=0, maxIterations=1000)
 
    #input_data = [((1,0,0,1,0,0,1,0), 1)]
    #for number, result in input_data:
    #   print "Input data: %r . Value needed: %0.4f - Output: %0.4f  " %  (number, result, network.evaluate(trainingData), )
-   errors = [abs(testPt[-1] - round(network.evaluate(testPt[0]))) for testPt in testData]
-
+   #errors = [abs(testPt[-1] - round(network.evaluate(testPt[0]))) for testPt in testData]
+   '''
    print testData[0]
    print testPt[-1]
    print testPt[0]
    #print errors
    a = network.evaluate(testPt[0])
    print a
-
+   '''
    #print "Average error: %.4f" % (sum(errors)*1.0 / len(errors))
    
    #print "Input: %0.4f - Output: %0.4f  " %  (testData[0], network.evaluate(testData[0]) )
-   ''' 
+
 
 if __name__ == "__main__":
 
@@ -237,6 +243,8 @@ if __name__ == "__main__":
 
    #digitsTest()
    #print net
+
+   
 
    print('\a')
    print('\a')

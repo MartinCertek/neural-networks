@@ -1,9 +1,7 @@
 import random
 import math
 
-#natiahnut velkost zo vstupu
-#table= [ [ 0 for i in range(10) ] for j in range(10) ]
-#print table
+
 #
 net = []
 #net.insert(0, ((2,3),13))
@@ -261,11 +259,21 @@ class Network:
          node.updateWeights(learningRate, momentum)
 
    def train(self, labeledExamples, learningRate, momentum, maxIterations):
-      #random.shuffle(labeledExamples)
-      #TODO add error rate as stop factor
-      #i =  range(len(labeledExamples))
-      #random.shuffle(i)
-      #print labeledExamples
+      
+
+      #shuffle - bol problem s original shufflom (prevzata fcia)
+      try:
+      # available in Python 2.0 and later
+         shuffle = random.shuffle
+      except AttributeError:
+         def shuffle(x):
+            for i in xrange(len(x)-1, 0, -1):
+            # pick an element in x[:i+1] with which to exchange x[i]
+               j = int(random.random() * (i+1))
+               x[i], x[j] = x[j], x[i]
+
+
+
       MSE = 0
       i=0
 
@@ -273,6 +281,7 @@ class Network:
          MSE = 0
          classOK = 0
          i += 1
+         shuffle(labeledExamples)
          for example, label in labeledExamples:
             #print example
             #print label
@@ -305,6 +314,16 @@ class Network:
          #print "MSE_sum"
          #print MSE
 
+   def runNet(self, labeledExamples, learningRate, momentum, maxIterations):
+      for example, label in labeledExamples:
+         a = example
+         print a
+         print label
+         #for number in a
+         #   print number
+      
+     
+
 
 #print table
-print net
+#print net

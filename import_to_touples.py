@@ -1,5 +1,7 @@
 import operator
 from ast import literal_eval
+import random
+
 
 '''
 
@@ -62,7 +64,7 @@ for line in f:
     myList.append(line)
 print(myList)
 
-'''
+
 digits = []
 
 with open('p_data.txt', 'r') as dataFile:
@@ -77,5 +79,30 @@ with open('p_data.txt', 'r') as dataFile:
         print outBin
 print digits
 
+'''
 
+try:
+    # available in Python 2.0 and later
+    shuffle = random.shuffle
+except AttributeError:
+    def shuffle(x):
+        for i in xrange(len(x)-1, 0, -1):
+            # pick an element in x[:i+1] with which to exchange x[i]
+            j = int(random.random() * (i+1))
+            x[i], x[j] = x[j], x[i]
+
+xorData = [
+             ((0,0), 0),
+             ((0,1), 1),
+             ((1,0), 1),
+             ((1,1), 0),
+            ]
+print xorData
+
+
+cards = range(52)
+#print cards
+
+shuffle(xorData)
+print xorData
 
