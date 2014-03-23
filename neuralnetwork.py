@@ -312,7 +312,47 @@ class Network:
          if((i % 10) == 1):
             print "Iteration: %d - MSE: %.4f - ClassifiedOK: %.4f " %  (i, MSE, float(classOK/len(labeledExamples)))
          #print "MSE_sum"
-         #print MSE
+         #print MSE 
+
+      # ulozenie natrenovanej siete 
+      f = open('ulozenie_netrenov.txt','w')
+      
+      for iN in self.inputNodes:
+
+         for e in iN.outgoingEdges:
+            print "I: %d , J: %d" % (e.index_i, e.index_j)
+            print "Weight: %0.4f" % e.weight
+            net.insert(len(net),((e.index_i, e.index_j),e.weight))
+            f.write(str(e.index_i))
+            f.write(",")
+            f.write(str(e.index_j))
+            f.write("|")
+            f.write(str(e.weight))
+            f.write('\n')
+            #f.write(str(((e.index_i, e.index_j),e.weight)))
+            #f.write(",")
+
+      for e in self.outputNode.incomingEdges:
+         print "I: %d , J: %d" % (e.index_i, e.index_j)
+         print "Weight: %0.4f" % e.weight
+         net.insert(len(net),((e.index_i, e.index_j),e.weight))
+         f.write(str(e.index_i))
+         f.write(",")
+         f.write(str(e.index_j))
+         f.write("|")
+         f.write(str(e.weight))
+         f.write('\n')
+         #f.write(str(((e.index_i, e.index_j),e.weight)))
+         #f.write(",")
+         # TODO - test, ci nerobi ciarka problem pri load dat
+
+      print net
+      
+      f.close
+
+      
+
+
 
    def runNet(self, labeledExamples, learningRate, momentum, maxIterations):
       for example, label in labeledExamples:

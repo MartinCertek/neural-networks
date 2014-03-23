@@ -177,12 +177,12 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    new_inst = Data()
    telcoData = new_inst.getDataTelco()
 
-   #network.runNet(telcoData, learningRate, momentum, maxIterations)
+   network.runNet(telcoData, learningRate, momentum, maxIterations)
    
 
    #TODO define number of test and train data
    #print "Lenght: %d " % len(telcoData)
-   trainInxEnd = int(len(telcoData) * 0.80)
+   trainInxEnd = int(len(telcoData) * 0.01)
    testInxStr  = trainInxEnd
    #print "Test index: %d" % testInxStr
 
@@ -198,7 +198,7 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    
 
 
-   #network.train(trainingData, learningRate=0.8, momentum=0, maxIterations=1000)
+   network.train(trainingData, float(learningRate), float(momentum), int(maxIterations))
 
    #input_data = [((1,0,0,1,0,0,1,0), 1)]
    #for number, result in input_data:

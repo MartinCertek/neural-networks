@@ -17,6 +17,7 @@ class Data:
 		#print digits
 		return digits
 
+
 	def getDataParity(self): 
 
 		digits = []
