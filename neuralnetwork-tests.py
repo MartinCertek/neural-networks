@@ -49,19 +49,7 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
    for number, result in xorData:
       print "Error for %r is %0.4f. Output was:%0.4f" % (number, result - network.evaluate(number, result, 4), network.evaluate(number, result, 4))
 
-   i = 0
-   for inputNode in inputNodes:
-      i += 1
-      j = 0
-      for node in hiddenNodes:
-         j += 1
-         print Edge(inputNode, node, i, j).weight
-         e = Edge(inputNode, node, i, j).weight
-         #f = Edge(inputNode, node, i, j).weight
-         #print f
-         net.insert(len(net), ((i,j),e))
-         print Edge
-
+   #network.runNet(xorData)
          
       
    #vytvori hrany medzi skrytou vrstvou a vystupom
@@ -69,7 +57,7 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
    m = 0
    for node in hiddenNodes:
       m += 1
-      print Edge(node, outputNode, n_num, m).weight
+      #print Edge(node, outputNode, n_num, m).weight
       e = Edge(node, outputNode, n_num, m).weight
       #f = Edge(node, outputNode, n_num, m).weight
       #print f
@@ -130,7 +118,6 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
 
    
    #test input od pouzivatela
-   #TODO - citat input z terminalu
    
    input_data = [((1,1,0,1,0,0,1,0), 0)]
    for number, result in input_data:
@@ -177,12 +164,9 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    new_inst = Data()
    telcoData = new_inst.getDataTelco()
 
-   network.runNet(telcoData, learningRate, momentum, maxIterations)
    
-
-   #TODO define number of test and train data
    #print "Lenght: %d " % len(telcoData)
-   trainInxEnd = int(len(telcoData) * 0.01)
+   trainInxEnd = int(len(telcoData) * 0.1)
    testInxStr  = trainInxEnd
    #print "Test index: %d" % testInxStr
 
@@ -195,10 +179,12 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    # otvorenie suboru na zapis
    with open('telco_OUT.txt', 'w') as f:
       f.write(str(testData))
-   
-
-
+ 
    network.train(trainingData, float(learningRate), float(momentum), int(maxIterations))
+
+   test = telcoData[-0:1]
+
+   network.runNet(test)
 
    #input_data = [((1,0,0,1,0,0,1,0), 1)]
    #for number, result in input_data:

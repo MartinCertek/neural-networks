@@ -33,37 +33,16 @@ class Node:
       sumMSE = 0
    
 
-      #file = open("output.txt", "w")
-
       #print "*********************"
       for e in self.incomingEdges:
          theInput = e.source.evaluate(inputVector, label, listLenght)
-         #print "Input:"
-         #print theInput
-         #print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight) 
-         #table[e.index_i][e.index_j] = e.weight
          self.lastInput.append(theInput)
-         weightedSum += e.weight * theInput  #TODO pridat prah
-         #file.write(str(e.weight))
-         #print "weight:"
-         #print e.weight
-         #print "--------------------"
-
-      #file.close()
-      
+         weightedSum += e.weight * theInput  
 
 
       self.lastOutput = activationFunction(weightedSum)
       self.evaluateCache = self.lastOutput
-      #print "label:"
-      #print label
-      #print "result:"
-      #print self.lastOutput
-      #print "listLenght:"
-      #print listLenght
-      #sumMSE += ((label - self.lastOutput) ** 2)
-      #print "sumMSE"
-      #print sumMSE
+   
       return self.lastOutput
 
    def evaluate_test(self, inputVector, result, listLenght):
@@ -73,27 +52,17 @@ class Node:
 
       self.lastInput = []
       weightedSum = 0
-   
-
-      #file = open("output.txt", "w")
+ 
 
       #print "*********************"
       for e in self.incomingEdges:
          theInput = e.source.evaluate(inputVector, result. listLenght)
-         #print "Input:"
-         #print theInput
-         #print "["+ str(e.index_i) + "," + str(e.index_j) +"]" + " " + str(e.weight)
          e.lastWeight = e.weight 
-         #table[e.index_i][e.index_j] = e.weight
 
          net.insert(0, ((e.index_i,e,index_j),e.weight))
 
          self.lastInput.append(theInput)
-         weightedSum += e.weight * theInput  #TODO pridat prah
-         #file.write(str(e.weight))
-         #print "weightedSum:"
-         #print weightedSum
-         #print "--------------------"
+         weightedSum += e.weight * theInput 
       
 
    def getError(self, label):
@@ -107,13 +76,11 @@ class Node:
 
       assert self.lastOutput is not None
 
-      if self.outgoingEdges == []: # this is output node
+      if self.outgoingEdges == []: # vystupny neuron
          self.error = label - self.lastOutput
       else:
          self.error = sum([edge.weight * edge.target.getError(label) for edge in self.outgoingEdges])
 
-      #print "Error:"   
-      #print self.error
       return self.error
 
    def updateWeights(self, learningRate, momentum):
@@ -194,7 +161,8 @@ class Edge:
       self.index_i  = index_i
       self.index_j  = index_j
   
-      # attach the edges to its nodes
+      # priradenie hran k neuronom
+
       source.outgoingEdges.append(self)
       target.incomingEdges.append(self)
 
@@ -218,10 +186,6 @@ class Network:
       self.outputNode.clearEvaluateCache()
 
       output = self.outputNode.evaluate_test(inputVector, result, listLenght)
-
-      #MSE = ((result - output) ** 2) 
-      #print "MSE:"
-      #print MSE
       
       return output
 
@@ -283,8 +247,7 @@ class Network:
          i += 1
          shuffle(labeledExamples)
          for example, label in labeledExamples:
-            #print example
-            #print label
+   
             output = self.evaluate(example, label, len(labeledExamples))
             getMSE, getClassifiedOK = self.getMSError(example, label, len(labeledExamples))  # TODO podla dlzky examplu
             #print getMSE
@@ -301,16 +264,13 @@ class Network:
             self.updateWeights(learningRate, momentum)
             #self.evaluate_test(example, label, len(labeledExamples))
 
-
-            # TODO vysledky ciastkovych rozdielov pre kazdy z examplov
-         #print "Len: " + str(len(labeledExamples))
          maxIterations -= 1
          
          #print MSE
          #print classOK
          MSE = MSE/len(labeledExamples)
          if((i % 10) == 1):
-            print "Iteration: %d - MSE: %.4f - ClassifiedOK: %.4f " %  (i, MSE, float(classOK/len(labeledExamples)))
+            print "Iteration: %d - MSE: %.4f - ClassifiedOK: %0.4f " %  (i, MSE, float(classOK/len(labeledExamples)))
          #print "MSE_sum"
          #print MSE 
 
@@ -320,8 +280,8 @@ class Network:
       for iN in self.inputNodes:
 
          for e in iN.outgoingEdges:
-            print "I: %d , J: %d" % (e.index_i, e.index_j)
-            print "Weight: %0.4f" % e.weight
+            #print "I: %d , J: %d" % (e.index_i, e.index_j)
+            #print "Weight: %0.4f" % e.weight
             net.insert(len(net),((e.index_i, e.index_j),e.weight))
             f.write(str(e.index_i))
             f.write(",")
@@ -329,12 +289,11 @@ class Network:
             f.write("|")
             f.write(str(e.weight))
             f.write('\n')
-            #f.write(str(((e.index_i, e.index_j),e.weight)))
-            #f.write(",")
+
 
       for e in self.outputNode.incomingEdges:
-         print "I: %d , J: %d" % (e.index_i, e.index_j)
-         print "Weight: %0.4f" % e.weight
+         #print "I: %d , J: %d" % (e.index_i, e.index_j)
+         #print "Weight: %0.4f" % e.weight
          net.insert(len(net),((e.index_i, e.index_j),e.weight))
          f.write(str(e.index_i))
          f.write(",")
@@ -342,28 +301,67 @@ class Network:
          f.write("|")
          f.write(str(e.weight))
          f.write('\n')
-         #f.write(str(((e.index_i, e.index_j),e.weight)))
-         #f.write(",")
-         # TODO - test, ci nerobi ciarka problem pri load dat
 
-      print net
+
+      #print net
       
       f.close
 
+
+
+   def runNet(self, labeledExamples):
       
-
-
-
-   def runNet(self, labeledExamples, learningRate, momentum, maxIterations):
+      i = 0
+      sumWeight = 0
+      print net
+      out = []
+      
       for example, label in labeledExamples:
          print "Label: %d " % label
          print "Example: " + str(example)
+         sumWeight = 0
 
-         for aTuple in example:
-            print(aTuple)
-      
-     
+         
+         for ind in range(len(example)):    #range(len(example)) = pocet vstupov/neuronov
+            nn = 0
+            for inValue in example:
+            
+
+            # index na ktory neuron - vstup riesim
+            # treba postupne prejst cez vsetky vahy neuronu z indexom kde i z cyklu sa bude rovnat i vahy
+            # hodnota ktoru treba poslat systemom - prvy z vektora prejde cez vsetky hrany * vaha z prveho neuronu atd.
+               #print "NN: %d , i: %d " % (nn,ind)
+               #print "Input: %d" % inValue
+               weight = net[nn+ind][1]
+               #print weight
+               sumWeight += inValue * weight
+            #tpl = net[nn][i]
+            #print tpl
+            #weight = tpl[1]
+            #print "Weight: %0.4f " % weight
+            #print "index: %0.4f " % index
+            #sumWeight += inValue * weight
+               nn += len(example)
+            #print sumWeight
+            output = activationFunction(sumWeight)
+            out.append(output)
+            #print "Sigmoid out for neuron: %0.4f " % output
+
+            sumWeight = 0
+            #print out
+         #i += 1
+
+         sumOut = 0
+         startIndex = (len(example) ** 2) + 2 
+         for hOut in out:
+            #print hOut # vystup z neuronu
+            
+            #print startIndex
+            sumOut += hOut * net[startIndex][1]
+            #print net[startIndex][1]
+            startIndex += 1
+         totalOut = activationFunction(sumOut)
+
+      print "Total out of net: %0.4f " % totalOut
 
 
-#print table
-#print net
