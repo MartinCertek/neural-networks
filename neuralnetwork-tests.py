@@ -46,13 +46,8 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
 
    network.train(xorData, float(learningRate), float(momentum), int(maxIterations))
 
-   for number, result in xorData:
-      print "Error for %r is %0.4f. Output was:%0.4f" % (number, result - network.evaluate(number, result, 4), network.evaluate(number, result, 4))
 
-   #network.runNet(xorData)
-         
-      
-   #vytvori hrany medzi skrytou vrstvou a vystupom
+   #ulozenie natrenovanych hodnot 
    n_num += 1
    m = 0
    for node in hiddenNodes:
@@ -63,7 +58,25 @@ def xorRun(learningRate, momentum, maxIterations, inN, hN):
       #print f
       net.insert(len(net), ((n_num,m),e))
 
+   #shuffle premiesa hodnoty - znovuupratanie aby bol vystup prehladnejsi
+   xorData = [
+             ((0,0), 0),
+             ((0,1), 1),
+             ((1,0), 1),
+             ((1,1), 0),
+            ]
 
+   print "\n"
+   print "\n"
+   print "\n"
+   #test siete - vysledky, error
+   for number, result in xorData:
+      print "Error for %r is %0.4f. Output was:%0.4f" % (number, result - network.evaluate(number, result, 4), network.evaluate(number, result, 4))
+         
+      
+ 
+
+# fcia na volanie behu parity - pracuje s parity datami
 def parityRun(learningRate, momentum, maxIterations, inN, hN):
 
    n_num = int(inN)
@@ -73,8 +86,6 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
    hiddenNodes = [Node() for i in range(int(h_num))]
    outputNode = Node()
 
-   #drzat cislovanie hran - z akeho uzla ide , kam, vznikne tak pole - 
-   #array zo suradnicami i, j - z iteho vstupu ide do jteho neuronu vyssej vrstvy
 
    # vytvori hrany medzi vstupnou vrstvou a skrytou vrstvou, vahy su random 
    i = 0
@@ -94,27 +105,13 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
       Edge(node, outputNode, n_num, m)
 
 
+   #priradenie neuronov k sieti
    network.outputNode = outputNode
    network.inputNodes.extend(inputNodes)
 
-   ''' 
-   result = []
-   with open('parity.txt', 'r') as f:
-     for line in f:
-       result.extend(literal_eval(line.strip()))
-
-   #print result
-   parityData = result[:255]
-   #print parityData
-   ''' 
    new_inst = Data()
    parityData = new_inst.getDataParity()
    network.train(parityData, float(learningRate), float(momentum), int(maxIterations))
-
-
-   # test konzistentnosti
-   #for number, isEven in parityData:
-   #   print "Error for %r is %0.4f. Output was:%0.4f" % (number, isEven - network.evaluate(number), network.evaluate(number))
 
    
    #test input od pouzivatela
@@ -124,9 +121,7 @@ def parityRun(learningRate, momentum, maxIterations, inN, hN):
       #print number
       print "Input data: %r . Value needed: %0.4f - Output: %0.4f  " %  (number, result, network.evaluate(number, result, 256))
       
-      #errors = abs(result - round(network.evaluate_test(number)))
-      #print "Error: %0.4f" % (errors)
-      #network.evaluate_test(number)
+
 
 
 def telcoRun(learningRate, momentum, maxIterations, inN, hN):
@@ -166,7 +161,9 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
 
    
    #print "Lenght: %d " % len(telcoData)
-   trainInxEnd = int(len(telcoData) * 0.1)
+   
+   # trenovacie data = 20% vsetkych
+   trainInxEnd = int(len(telcoData) * 0.2)
    testInxStr  = trainInxEnd
    #print "Test index: %d" % testInxStr
 
@@ -190,14 +187,7 @@ def telcoRun(learningRate, momentum, maxIterations, inN, hN):
    #for number, result in input_data:
    #   print "Input data: %r . Value needed: %0.4f - Output: %0.4f  " %  (number, result, network.evaluate(trainingData), )
    #errors = [abs(testPt[-1] - round(network.evaluate(testPt[0]))) for testPt in testData]
-   '''
-   print testData[0]
-   print testPt[-1]
-   print testPt[0]
-   #print errors
-   a = network.evaluate(testPt[0])
-   print a
-   '''
+ 
    #print "Average error: %.4f" % (sum(errors)*1.0 / len(errors))
    
    #print "Input: %0.4f - Output: %0.4f  " %  (testData[0], network.evaluate(testData[0]) )
@@ -218,18 +208,6 @@ if __name__ == "__main__":
    elif sys.argv[1] == "telco":
      telcoRun(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 
-   
-   #with open('data.txt','w') as theFile:
-   #   theFile.write("{")
-
-   #PARITY_test
-   #parityRun()
-
-   #with open('sine.txt','a') as theFile:
-   #   theFile.write("}\n")
-
-   #digitsTest()
-   #print net
 
    
 

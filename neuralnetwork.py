@@ -1,5 +1,7 @@
+from __future__ import division
 import random
 import math
+
 
 
 #
@@ -13,18 +15,18 @@ def activationFunction(x):
 class Node:
 
    def __init__(self):
-      self.lastOutput = None
-      self.lastInput = None
+      self.lastOutput = None   # = vystup daneho neuronu
+      self.lastInput = None    # = vstup daneho neuronu
       self.error = None
-      self.outgoingEdges = []
-      self.incomingEdges = []
-      self.addBias()
+      self.outgoingEdges = []  # vystupne hrany z neuronu
+      self.incomingEdges = []  # vstupne hrany do neuronu
+      self.addBias()           # fcia na pridanie prahu
 
 
    def addBias(self):
-      self.incomingEdges.append(Edge(BiasNode(), self,0,0)) #chcecknut, ci netreba dat index_i, index_j
+      self.incomingEdges.append(Edge(BiasNode(), self,0,0)) #pridanie prahu
 
-   def evaluate(self, inputVector, label, listLenght):
+   def evaluate(self, inputVector, label, listLenght):  #vystup neuronu
       if self.lastOutput is not None:
          return self.lastOutput
 
@@ -93,8 +95,8 @@ class Node:
             and self.lastInput is not None):
 
          for i, edge in enumerate(self.incomingEdges):
-            edge.weight += (learningRate * self.lastOutput * (1 - self.lastOutput) *
-                           self.error * self.lastInput[i])  + (momentum * edge.lastWeight)
+            edge.weight += (learningRate * self.lastOutput * (1 - self.lastOutput) *   #lastOutput = f(x)
+                           self.error * self.lastInput[i])  + (momentum * edge.delta)
 
          for edge in self.outgoingEdges:
             edge.target.updateWeights(learningRate, momentum)
@@ -157,7 +159,7 @@ class Edge:
       self.weight   = random.uniform(-0.5,0.5)
       self.source   = source
       self.target   = target
-      self.lastWeight = 0
+      self.delta = 0
       self.index_i  = index_i
       self.index_j  = index_j
   
@@ -196,11 +198,7 @@ class Network:
       classifiedOK = 0
 
       output = self.outputNode.evaluate(inputVector, result, listLenght)
-      '''
-      print "Output: " + str(output)
-      print "Result " + str(result)
-      print "Diff: " + str(abs(output-result))
-      '''
+   
       dif = (output-result)
       if (math.fabs(dif) <= 0.3):
          classifiedOK += 1
@@ -224,7 +222,6 @@ class Network:
 
    def train(self, labeledExamples, learningRate, momentum, maxIterations):
       
-
       #shuffle - bol problem s original shufflom (prevzata fcia)
       try:
       # available in Python 2.0 and later
@@ -237,11 +234,10 @@ class Network:
                x[i], x[j] = x[j], x[i]
 
 
-
       MSE = 0
       i=0
 
-      while ((maxIterations > 0)): # and (MSE > 0.01)):
+      while ((maxIterations > 0)): #and (MSE > 0.01))
          MSE = 0
          classOK = 0
          i += 1
@@ -270,7 +266,7 @@ class Network:
          #print classOK
          MSE = MSE/len(labeledExamples)
          if((i % 10) == 1):
-            print "Iteration: %d - MSE: %.4f - ClassifiedOK: %0.4f " %  (i, MSE, float(classOK/len(labeledExamples)))
+            print "Iteration: %d - MSE: %.4f - ClassifiedOK: %0.2f " %  (i, MSE, classOK/len(labeledExamples))
          #print "MSE_sum"
          #print MSE 
 
@@ -282,6 +278,8 @@ class Network:
          for e in iN.outgoingEdges:
             #print "I: %d , J: %d" % (e.index_i, e.index_j)
             #print "Weight: %0.4f" % e.weight
+
+            #ulozenie natrenovanej siete 
             net.insert(len(net),((e.index_i, e.index_j),e.weight))
             f.write(str(e.index_i))
             f.write(",")
@@ -327,9 +325,6 @@ class Network:
             for inValue in example:
             
 
-            # index na ktory neuron - vstup riesim
-            # treba postupne prejst cez vsetky vahy neuronu z indexom kde i z cyklu sa bude rovnat i vahy
-            # hodnota ktoru treba poslat systemom - prvy z vektora prejde cez vsetky hrany * vaha z prveho neuronu atd.
                #print "NN: %d , i: %d " % (nn,ind)
                #print "Input: %d" % inValue
                weight = net[nn+ind][1]
